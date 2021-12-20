@@ -1,1 +1,1 @@
-# object-detection-with-ocr
+# image-capture-with-ocr
