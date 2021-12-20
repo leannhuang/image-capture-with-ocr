@@ -1,0 +1,13 @@
+# Rename to .env before creating deployment manifest from the template
+SUBSCRIPTION_ID=<Your Azure Subscription Id>
+RESOUCE_GROUP=<Your Azure Resource Group>
+AVA_PROVISIONING_TOKEN=<Your Azure Provision Token>
+
+CONTAINER_REGISTRY_USERNAME=<optional>
+CONTAINER_REGISTRY_PASSWORD=<optional>
+CONTAINER_REGISTRY_LOGINSERVER=<optional>
+
+# If changing the following, ensure the paths exist with the proper permissions on the device
+VIDEO_INPUT_FOLDER_ON_DEVICE=/home/localedgeuser/samples/input
+VIDEO_OUTPUT_FOLDER_ON_DEVICE=/var/media/
+APPDATA_FOLDER_ON_DEVICE=/var/lib/videoanalyzer/
