@@ -24,10 +24,55 @@ from datetime import datetime
 from datetime import datetime, timezone
 from subprocess import run
 
+RTSP_PROTOCOL = 'udp'
+RTSP_IP = 'azureeyemodule'
+RTSP_PORT = '8554'
+RTSP_PATH = 'result'
+IMAGE_PATH = './'
+IMAGE_NAME = 'computer_vision_ocr.png'
+SUBSCRIPTION_KEY = '<Your custom vision sub key>'
+COMPUTERVISION_LOCATION = "<Your custom vision region>"
+IMAGES_FOLDER = './'
+DEFINED_OBJECT = 'book'
+
+
+def image_capture():
+    ffmpeg_command = f'ffmpeg -rtsp_transport {RTSP_PROTOCOL} -loglevel error -timeout 2000000 -y -i rtsp://{RTSP_IP}:{RTSP_PORT}/{RTSP_PATH} -vframes 1 -strftime 1 {IMAGE_PATH}{IMAGE_NAME}'
+    print(f'Running: ffmpeg ${ffmpeg_command}')                       
+    ffmpeg_command_arr = ffmpeg_command.split(' ')
+    print(ffmpeg_command_arr)
+    process = run(ffmpeg_command_arr)                       
+    code = process.returncode
+
+    return code
+
+
+def recognize_text_in_stream(client):
+    print("===== Read Image =====")
+    with open(os.path.join(IMAGES_FOLDER, "computer_vision_ocr.png"), "rb") as image_stream:
+        image_analysis = client.recognize_printed_text_in_stream(
+            image=image_stream,
+            language="en"
+        )
+
+        if len(image_analysis.regions) > 0:
+            lines = image_analysis.regions[0].lines
+            print("Recognized:\n")
+            for line in lines:
+                line_text = " ".join([word.text for word in line.words])
+                print(line_text)
+        else:
+            print("Not Recognized")
+    
+    return line_text
+
 async def main():
     # The client object is used to interact with your Azure IoT hub.
     module_client = IoTHubModuleClient.create_from_edge_environment()
-
+    client = ComputerVisionClient(
+                endpoint="https://" + COMPUTERVISION_LOCATION + ".api.cognitive.microsoft.com/",
+                credentials=CognitiveServicesCredentials(SUBSCRIPTION_KEY)
+            )
     # connect the client.
     await module_client.connect()
 
@@ -37,24 +82,8 @@ async def main():
     # Define behavior for receiving an input message on input1 and input2
     # NOTE: this could be a coroutine or a function
     async def message_handler(input_message):
-        if input_message.input_name == "Input":
-            RTSP_PROTOCOL = 'udp'
-            RTSP_IP = 'azureeyemodule'
-            RTSP_PORT = '8554'
-            RTSP_PATH = 'result'
-            image_path = './'
-            image_name = 'computer_vision_ocr.png'
-            subscription_key = '<Your custom vision sub key>'
-            COMPUTERVISION_LOCATION = "<Your custom vision region>"
-            IMAGES_FOLDER = './'
+        if input_message.input_name == "Input":    
             line_text = ''
-            defined_object = 'book'
-               
-            client = ComputerVisionClient(
-                endpoint="https://" + COMPUTERVISION_LOCATION + ".api.cognitive.microsoft.com/",
-                credentials=CognitiveServicesCredentials(subscription_key)
-            )
-
             now = datetime.now()
             print('======================================START========================================')
             print(f'{now} The data in the message received on azureeyemodule was {input_message.data}')
@@ -67,35 +96,17 @@ async def main():
                 for inference_item in inference_list:
                     object_label =inference_item['label']
                     print(f'{object_label} detected')
-                    if object_label != defined_object:
+                    if object_label != DEFINED_OBJECT:
                         continue
 
-                    elif object_label == defined_object:    
+                    elif object_label == DEFINED_OBJECT:    
                         now = datetime.fromtimestamp(int(inference_item['timestamp'][:-9]))
-                        ffmpeg_command = f'ffmpeg -rtsp_transport {RTSP_PROTOCOL} -loglevel error -timeout 2000000 -y -i rtsp://{RTSP_IP}:{RTSP_PORT}/{RTSP_PATH} -vframes 1 -strftime 1 {image_path}{image_name}'
-                        print(f'Running: ffmpeg ${ffmpeg_command}')                       
-                        ffmpeg_command_arr = ffmpeg_command.split(' ')
-                        print(ffmpeg_command_arr)
-                        process = run(ffmpeg_command_arr)                       
-                        code = process.returncode
+                        
+                        code = image_capture()
+
                         if code == 0:
                             print("ffmpeg command success")
-                            print("===== Read Image =====")
-
-                            with open(os.path.join(IMAGES_FOLDER, "computer_vision_ocr.png"), "rb") as image_stream:
-                                image_analysis = client.recognize_printed_text_in_stream(
-                                    image=image_stream,
-                                    language="en"
-                                )
-
-                            if len(image_analysis.regions) > 0:
-                                lines = image_analysis.regions[0].lines
-                                print("Recognized:\n")
-                                for line in lines:
-                                    line_text = " ".join([word.text for word in line.words])
-                                    print(line_text)
-                            else:
-                                print("Not Recognized")
+                            line_text = recognize_text_in_stream(client)
                             
                         else:
                             print("invalid result: ffmpeg command fail")
