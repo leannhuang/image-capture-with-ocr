@@ -13,14 +13,19 @@ Use this information to deploy people counting modules on your edge device
 
 ## Setup for edge
 
-1. Fill your ACR address in module.json file (ex: dk361d.azurecr.io/ocr)
+1. Modify the [DEFINED_OBJECT](https://github.com/leannhuang/image-capture-with-ocr/blob/main/modules/CustomModule/main.py#L36) in the `main.py` according to the object you defined in the custom vision
+   
+2. Fill your ACR address in `module.json` file (ex: dk361d.azurecr.io/ocr)
 ```
    "repository": "<Your container registry login server/respository name>"
 ```
-2. Build and push your IoT Edge solutions to your private ACR 
-Use VSCode as in [here](https://docs.microsoft.com/en-us/azure/iot-edge/tutorial-develop-for-linux?view=iotedge-2020-11#build-and-push-your-solution) to build and push your solutions
 
-3. Deploy edge modules to device
+3. Change the Azure IoT Edge Solution Default Platform to `arm64v8` [here](https://docs.microsoft.com/en-us/azure/iot-edge/tutorial-develop-for-linux?view=iotedge-2020-11#select-your-target-architecture)
+   
+4. Build and push your IoT Edge solutions to your private ACR 
+Use VSCode as in [here](https://docs.microsoft.com/en-us/azure/iot-edge/tutorial-develop-for-linux?view=iotedge-2020-11#build-and-push-your-solution) to build and push your solutions 
+
+5. Deploy edge modules to device
 Use VSCode as in [here](https://docs.microsoft.com/en-us/azure/iot-edge/tutorial-develop-for-linux?view=iotedge-2020-11#deploy-modules-to-device) to deploy the modules to the Percept DK with the above files.
 
 
