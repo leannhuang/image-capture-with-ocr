@@ -1,5 +1,5 @@
 # image-capture-with-ocr
-Capture the image when the defined object has been detect and send to Azure cognitive service OCR for further text recognition.
+Capture the image when the defined object has been detected and send to Azure cognitive service OCR for further text recognition.
 
 The sample code is a sample to guide you to capture image of the rtsp stream from Percept DK eye module for further processing.
 
