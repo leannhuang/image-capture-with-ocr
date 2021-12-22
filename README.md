@@ -17,15 +17,15 @@ The sample code is a sample to guide you to capture image of the rtsp stream fro
 
 
 ## Steps
-1. Create an Azure Container Registry [here](https://docs.microsoft.com/en-us/azure/container-registry/container-registry-get-started-portal)
-2. Get the registry info including `username`, `password`, and `login server` [here](https://docs.microsoft.com/en-us/azure/container-registry/container-registry-tutorial-prepare-registry#enable-admin-account)
+1. Create an Azure Container Registry as in [here](https://docs.microsoft.com/en-us/azure/container-registry/container-registry-get-started-portal)
+2. Get the registry info including `username`, `password`, and `login server` as in [here](https://docs.microsoft.com/en-us/azure/container-registry/container-registry-tutorial-prepare-registry#enable-admin-account)
 3. Create a file named `.env` in this folder based on `envtemplate`. Provide values for all variables.
-4. Create a object detection model and deploy it to DK [here](https://docs.microsoft.com/en-us/azure/azure-percept/tutorial-nocode-vision)
+4. Create a object detection model and deploy it to DK as in [here](https://docs.microsoft.com/en-us/azure/azure-percept/tutorial-nocode-vision)
    
 5. Visit the [CustomModule folder](https://github.com/leannhuang/image-capture-with-ocr/tree/main/modules/CustomModule) to deploy edge modules on your edge device
-6. Check the OCR capabilities and limitation [here](https://docs.microsoft.com/zh-tw/legal/cognitive-services/computer-vision/ocr-characteristics-and-limitations?context=/azure/cognitive-services/computer-vision/context/context)
+6. Check the OCR capabilities and limitation as in [here](https://docs.microsoft.com/zh-tw/legal/cognitive-services/computer-vision/ocr-characteristics-and-limitations?context=/azure/cognitive-services/computer-vision/context/context)
 
-7. Use VLC to check the rtsp result stream `rtsp:<ip>:8554/result` to see if the image fits the OCR limitation
+7. Use VLC to check the rtsp result stream `rtsp://<ip>:8554/result` to see if the image fits the OCR limitation
 8. Check the log of the custom module 
    
    

@@ -20,7 +20,7 @@ Use this information to deploy people counting modules on your edge device
    "repository": "<Your container registry login server/respository name>"
 ```
 
-3. Change the Azure IoT Edge Solution Default Platform to `arm64v8` [here](https://docs.microsoft.com/en-us/azure/iot-edge/tutorial-develop-for-linux?view=iotedge-2020-11#select-your-target-architecture)
+3. Change the Azure IoT Edge Solution Default Platform to `arm64v8` as in [here](https://docs.microsoft.com/en-us/azure/iot-edge/tutorial-develop-for-linux?view=iotedge-2020-11#select-your-target-architecture)
    
 4. Build and push your IoT Edge solutions to your private ACR 
 Use VSCode as in [here](https://docs.microsoft.com/en-us/azure/iot-edge/tutorial-develop-for-linux?view=iotedge-2020-11#build-and-push-your-solution) to build and push your solutions 
