@@ -35,8 +35,8 @@ COMPUTERVISION_LOCATION = "<Your custom vision region>"
 IMAGES_FOLDER = './'
 DEFINED_OBJECT = 'book'
 
-
 def image_capture():
+    
     ffmpeg_command = f'ffmpeg -rtsp_transport {RTSP_PROTOCOL} -loglevel error -timeout 2000000 -y -i rtsp://{RTSP_IP}:{RTSP_PORT}/{RTSP_PATH} -vframes 1 -strftime 1 {IMAGE_PATH}{IMAGE_NAME}'
     print(f'Running: ffmpeg ${ffmpeg_command}')                       
     ffmpeg_command_arr = ffmpeg_command.split(' ')
@@ -48,21 +48,22 @@ def image_capture():
 
 
 def recognize_text_in_stream(client):
+    
     print("===== Read Image =====")
     with open(os.path.join(IMAGES_FOLDER, "computer_vision_ocr.png"), "rb") as image_stream:
         image_analysis = client.recognize_printed_text_in_stream(
             image=image_stream,
             language="en"
         )
-
-        if len(image_analysis.regions) > 0:
-            lines = image_analysis.regions[0].lines
-            print("Recognized:\n")
-            for line in lines:
-                line_text = " ".join([word.text for word in line.words])
-                print(line_text)
-        else:
-            print("Not Recognized")
+  
+    if len(image_analysis.regions) > 0:
+        lines = image_analysis.regions[0].lines
+        print("Recognized:\n")
+        for line in lines:
+            line_text = " ".join([word.text for word in line.words])
+            print(line_text)
+    else:
+        print("Not Recognized")
     
     return line_text
 
@@ -101,13 +102,10 @@ async def main():
 
                     elif object_label == DEFINED_OBJECT:    
                         now = datetime.fromtimestamp(int(inference_item['timestamp'][:-9]))
-                        
                         code = image_capture()
-
                         if code == 0:
                             print("ffmpeg command success")
-                            line_text = recognize_text_in_stream(client)
-                            
+                            line_text = recognize_text_in_stream(client) 
                         else:
                             print("invalid result: ffmpeg command fail")
             
@@ -117,13 +115,11 @@ async def main():
                 }
             
             print("forwarding mesage to output1")
-            
+            print('====================================END========================================')
             msg = Message(json.dumps(json_data))
             msg.content_encoding = "utf-8"
             msg.content_type = "application/json"
             await module_client.send_message_to_output(msg, "output1")
-            print('====================================END========================================')
-
 
         else:
             print("message received on unknown input")
