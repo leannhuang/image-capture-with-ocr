@@ -26,6 +26,9 @@ The goal of this sample code is to guide you to capture image of the rtsp stream
 6. Check the OCR capabilities and limitation as in [here](https://docs.microsoft.com/zh-tw/legal/cognitive-services/computer-vision/ocr-characteristics-and-limitations?context=/azure/cognitive-services/computer-vision/context/context)
 
 7. Use VLC to check the rtsp result stream `rtsp://<ip>:8554/result` to see if the image fits the OCR limitation
+   
+    ![3](docs/images/3.png)
+
 8. Check the log of the custom module 
    
    
